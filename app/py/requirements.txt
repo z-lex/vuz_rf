@@ -1,0 +1,4 @@
+mysql-connector
+aiomysql
+sqlalchemy
+aiohttp

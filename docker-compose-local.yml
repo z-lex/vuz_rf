@@ -1,0 +1,32 @@
+version: '3'
+services:
+  base_image:
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+    image: ubuntu_go_python
+  web:
+    depends_on:
+      - base_image
+    build:
+      context: .
+    image: vuz_rf_web
+    ports:
+      - "8181:8080"
+    env_file:
+      - .env
+    volumes:
+      - ./:/code
+    links:
+      - db
+  db:
+    image: mysql:5.6
+    restart: always
+    ports:
+        - "3306:3306"
+    volumes:
+      - ./sql:/sql
+    command: --init-file=/sql/init.sql --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
