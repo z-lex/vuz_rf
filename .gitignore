@@ -1,3 +1,6 @@
+<<<<<<< HEAD
 app/py/__pycache__/*
+=======
+>>>>>>> 38295fca36f742c4954e4b4c756a1f62fb9293f5
 venv/*
 .idea/*
