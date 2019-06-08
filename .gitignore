@@ -1,3 +1,9 @@
 app/py/__pycache__/*
 venv/*
 .idea/*
+src/
+package-lock.json
+yarn.lock
+node_modules/
+yarn-error.log
+web/
