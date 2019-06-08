@@ -23,10 +23,13 @@ class HttpHandler:
         self.app = web.Application()
         self.app.add_routes([
             web.get('/', self.vuz_test),
-            web.get('/vuzapi/register', self.vuz_register),
-            web.get('/vuzapi/vuzlist', self.vuz_load_list),
-            web.get('/vuzapi/{code}/profile', self.vuz_load_profile),
-            web.post('/vuzapi/{name}/update_profile', self.vuz_update_profile)])
+            #web.get('/api/register', self.vuz_register),
+            web.get('/universities', self.vuz_load_list),
+            web.get('/universities/{code}/info', self.vuz_load_profile),
+            web.put('/universities/{code}', self.vuz_update_profile),
+            web.get('/universities/info', self.vuz_load_all_profiles),
+            web.post('/universities/{code}/docs', self.vuz_post_docs),
+        ])
         self.async_db = async_db
 
     async def start_server(self):
@@ -43,9 +46,6 @@ class HttpHandler:
 
     async def vuz_register(self, request):
         return web.Response(text="registered")
-
-    async def vuz_auth(self, request):
-        return web.Response(text="auth")
 
     async def vuz_load_list(self, request):
         if self.async_db is None:
@@ -67,8 +67,24 @@ class HttpHandler:
         except Exception as e:
             return web.json_response(json.dumps({'Status':'err','info': str(e)}))
 
+    async def vuz_load_all_profiles(self, request):
+        try:
+            vuz_list = await self.async_db.get_university_list()
+            res_dict = dict()
+            for vuz_code in vuz_list.keys():
+                vuz_profile = await self.async_db.get_university_profile(univ_code=vuz_code)
+                res_dict[vuz_code] = vuz_profile
+
+            return web.json_response(json.dumps(res_dict, indent=4, cls=CustomJSONEncoder))
+
+        except Exception as e:
+            return web.json_response(json.dumps({'Status':'err', 'info': str(e)}))
 
     async def vuz_update_profile(self, request):
+        return web.Response(text="profile updated")
+
+
+    async def vuz_post_docs(self, request):
         return web.Response(text="profile updated")
 
 

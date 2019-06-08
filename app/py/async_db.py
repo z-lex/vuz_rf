@@ -56,24 +56,35 @@ class AsyncDatabase():
             return str(e)
 
     async def get_university_list(self):
+        univ_dict = dict()
         try:
             async with self.engine.acquire() as conn:
                 res_proxy = await conn.execute(
                     sa.sql.select([self.tbl_universities])
                 )
                 # должна быть одна запись
-                (res,) = await res_proxy.fetchall()
+                res_univ = await res_proxy.fetchall()
+                for univ in res_univ:
+                    univ_id = univ['idUniversity']
+                    univ_dict[univ_id] = dict(univ)
 
-                return dict(res.items())
 
         except Exception as e:
             print("get_university_list: ", e)
-            return(e)
+        return univ_dict
 
     async def get_university_profile(self, univ_code):
         profile = dict()
         try:
             async with self.engine.acquire() as conn:
+                res_proxy = await conn.execute('SELECT * FROM University WHERE idUniversity = {0}'.format(univ_code))
+                res_univ = await res_proxy.fetchall()
+                if len(res_univ) > 0:
+                    (res_univ,) = res_univ
+                    profile['data'] = dict(res_univ)
+                else:
+                    return profile
+
                 # получаем все факультеты
                 res_proxy = await conn.execute('SELECT * FROM Faculty WHERE idUniversity = {0}'.format(univ_code))
                 res_fac = await res_proxy.fetchall()
@@ -128,6 +139,20 @@ class AsyncDatabase():
                             profile['faculties'][fac_id]['programmes'][prog_id]['non_ege'][non_ege['idNonEgeExam']]['exam_name'] = non_ege['exam_name']
                             profile['faculties'][fac_id]['programmes'][prog_id]['non_ege'][non_ege['idNonEgeExam']]['min_value'] = non_ege['min_value']
                             profile['faculties'][fac_id]['programmes'][prog_id]['non_ege'][non_ege['idNonEgeExam']]['max_value'] = non_ege['max_value']
+
+                        # требования к документам
+                        profile['faculties'][fac_id]['programmes'][prog_id]['docs'] = dict()
+                        res_proxy_doc = await conn.execute("SELECT docs_required.idDoc , documet_dictionary.doc_name,"
+                                                               " documet_dictionary.is_common_doc FROM "
+                                                               "documet_dictionary, docs_required WHERE "
+                                                               "documet_dictionary.idDoc = docs_required .idDoc AND idProgramme = {0}".format(prog_id))
+
+                        res_doc = await res_proxy_doc.fetchall()
+                        for doc in res_doc:
+                            doc_code = doc['idDoc']
+                            profile['faculties'][fac_id]['programmes'][prog_id]['docs'][doc_code] = dict()
+                            profile['faculties'][fac_id]['programmes'][prog_id]['docs'][doc_code]['doc_name'] = doc['doc_name']
+                            profile['faculties'][fac_id]['programmes'][prog_id]['docs'][doc_code]['is_common_doc'] = doc['is_common_doc']
 
         except Exception as e:
             print("cant perform query: ", e)
