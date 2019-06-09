@@ -39,8 +39,21 @@ class Recognizer:
         except Exception as e:
             print('cant recognize ', filepath, ': ', e)
 
-    def parse_text_as_OMS(self):
-        pass
+    def parse_text_as_OMS(self, text):
+
+        text = re.sub(r'\n', ' ', text)
+        m = re.match(r'.*([0-9]{16}).*', text)
+        if m is not None:
+            return {'id':m.group(1)}
+        return None
+
+    def recognize_OMS_file(self, filepath):
+        try:
+            text = self.get_doc_text(filepath=filepath)
+            data = self.parse_text_as_OMS(text)
+            return data
+        except Exception as e:
+            print('cant recognize ', filepath, ': ', e)
 
 if __name__ == '__main__':
     filename = input('type img filename: ')

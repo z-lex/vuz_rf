@@ -91,9 +91,12 @@ class HttpHandler:
         field = await reader.next()
         assert field.name == 'type'
         type = await field.read(decode=True)
+        type = type.decode('utf-8')
 
         field = await reader.next()
         assert field.name == 'data'
+
+        recog = Recognizer()
 
         filename = field.filename
 
@@ -106,8 +109,13 @@ class HttpHandler:
                 size += len(chunk)
                 f.write(chunk)
 
-        recog = Recognizer()
-        data = recog.recognize_SNILS_file(filename)
+        # распознавание поступивших документов
+        data = {}
+        import pdb; pdb.set_trace()
+        if str(type) =='snils':
+            data = recog.recognize_SNILS_file(filename)
+        elif str(type) == 'oms':
+            data = recog.recognize_OMS_file(filename)
         print(data)
         payload = json.dumps(data)
         return web.json_response(payload)
