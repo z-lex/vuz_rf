@@ -1,5 +1,6 @@
 from aiohttp import web
 import json
+import base64
 from datetime import datetime
 import aiohttp
 from docs_recognition import Recognizer
@@ -29,6 +30,7 @@ class HttpHandler:
             web.get('/universities/{code}/info', self.vuz_load_profile),
             web.put('/universities/{code}', self.vuz_update_profile),
             web.get('/universities/info', self.vuz_load_all_profiles),
+            web.post('/universities/recognize', self.recognize_docs),
             web.post('/universities/{code}/docs', self.vuz_post_docs),
         ])
         self.async_db = async_db
@@ -84,17 +86,50 @@ class HttpHandler:
     async def vuz_update_profile(self, request):
         return web.Response(text="profile updated")
 
+    async def recognize_docs(self, request):
+        data = await request.json()
+        resp = dict()
+        try:
+            for doc in data['Docs']:
+                if 'jpeg' in doc['ContentType']:
+                    ext = 'jpeg'
+                elif 'png' in doc['ContentType']:
+                    ext = 'png'
+                else: continue
+                recog = Recognizer()
+                bin_data = base64.b64decode(doc['Data'])
+
+                if doc['Type'] =='snils':
+                    filename = 'snils.'+ext
+                    ff = open(filename, 'wb')
+                    ff.write(bin_data)
+                    ff.close()
+                    resp[doc['ID']] = recog.recognize_SNILS_file(filename)
+                elif doc['Type'] == 'oms':
+                    filename = 'oms.'+ext
+                    ff = open(filename, 'wb')
+                    ff.write(bin_data)
+                    ff.close()
+                    resp[doc['ID']] = recog.recognize_OMS_file(filename)
+                else:
+                    continue
+            return web.json_response(json.dumps(resp))
+        except Exception as e:
+            print('cant recognize: ', e)
+
 
     async def vuz_post_docs(self, request):
-        reader = await request.multipart()
+
+        reader = await request.multidict()
 
         field = await reader.next()
-        assert field.name == 'type'
+        assert field.name == 'UserID'
+
         type = await field.read(decode=True)
         type = type.decode('utf-8')
 
         field = await reader.next()
-        assert field.name == 'data'
+        #assert field.name == 'data'
 
         recog = Recognizer()
 
@@ -111,7 +146,6 @@ class HttpHandler:
 
         # распознавание поступивших документов
         data = {}
-        import pdb; pdb.set_trace()
         if str(type) =='snils':
             data = recog.recognize_SNILS_file(filename)
         elif str(type) == 'oms':
@@ -124,4 +158,4 @@ class HttpHandler:
 
 if __name__ == '__main__':
     handler = HttpHandler()
-    web.run_app(handler.app)
+    web.run_app(handler.app, port=8181)
