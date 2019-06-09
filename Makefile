@@ -6,4 +6,7 @@ pull:
 	docker pull kirooha/cutting_edge_python
 run:
 	docker run -d -it -p 80:8080 kirooha/cutting_edge_python
+delete:
+	docker rm -f $(docker ps -a -q)
+
 
