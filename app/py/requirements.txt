@@ -2,3 +2,6 @@ mysql-connector
 aiomysql
 sqlalchemy
 aiohttp
+opencv-contrib-python
+pytesseract
+pillow

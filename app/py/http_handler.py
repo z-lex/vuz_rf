@@ -2,6 +2,8 @@ from aiohttp import web
 import json
 from datetime import datetime
 import aiohttp
+from docs_recognition import Recognizer
+
 #from bs4 import BeautifulSoup
 
 
@@ -23,7 +25,6 @@ class HttpHandler:
         self.app = web.Application()
         self.app.add_routes([
             web.get('/', self.vuz_test),
-            #web.get('/api/register', self.vuz_register),
             web.get('/universities', self.vuz_load_list),
             web.get('/universities/{code}/info', self.vuz_load_profile),
             web.put('/universities/{code}', self.vuz_update_profile),
@@ -85,7 +86,31 @@ class HttpHandler:
 
 
     async def vuz_post_docs(self, request):
-        return web.Response(text="profile updated")
+        reader = await request.multipart()
+
+        field = await reader.next()
+        assert field.name == 'type'
+        type = await field.read(decode=True)
+
+        field = await reader.next()
+        assert field.name == 'data'
+
+        filename = field.filename
+
+        size = 0
+        with open(filename, 'wb') as f:
+            while True:
+                chunk = await field.read_chunk()
+                if not chunk:
+                    break
+                size += len(chunk)
+                f.write(chunk)
+
+        recog = Recognizer()
+        data = recog.recognize_SNILS_file(filename)
+        print(data)
+        payload = json.dumps(data)
+        return web.json_response(payload)
 
 
 

@@ -6,4 +6,9 @@ RUN set -x \
                 python3.7 \
                 python3.7-dev \
                 python3-pip \
-                golang
+                golang \
+                libtesseract4 \
+                tesseract-ocr \
+                tesseract-ocr-rus \
+                libsm6
+
