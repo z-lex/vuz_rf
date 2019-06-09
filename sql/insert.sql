@@ -2,6 +2,10 @@
 insert into `mydb`.`University` ( `idUniversity`, `university_name`, `city`, `full_address`, `gps_coord1`, `gps_coord2`) 
 values (1, 'ИТМО','Санкт-Петербург','197101, г. Санкт-Петербург, Кронверкский проспект, д.49.', 11.11,22.22);
 
+insert into `mydb`.`University` ( `idUniversity`, `university_name`, `city`, `full_address`, `gps_coord1`, `gps_coord2`) 
+values (2, 'СПбГУАП','Санкт-Петербург','ул. Большая Морская, д. 67, лит. А, Санкт-Петербург, 190000, Россия', 11.11,22.22);
+
+
 insert into `mydb`.`Contacts` (
   `idContacts`,
   `phone_number`,
@@ -11,6 +15,12 @@ insert into `mydb`.`Contacts` (
   `idContacts`,
   `phone_number`,
   `email` ) values (2, '+7 (812) 457-18-56', 'mvnikitina@corp.ifmo.ru');
+  
+  insert into `mydb`.`Contacts` (
+  `idContacts`,
+  `phone_number`,
+  `email` ) values (3, '(812) 710-65-10', 'priem@guap.ru');
+  
 
 insert into `mydb`.`Faculty` (
   `idFaculty`,
@@ -23,7 +33,7 @@ insert into `mydb`.`Faculty` (
   `address`,
   `Con_idContacts`)
   values (1, 1, 'Факультет систем управления и робототехники (ФСУиР)',
-  ' ', ' ', 0, 'https://www.ifmo.ru/ru/viewfaculty/103/fakultet_sistem_upravleniya_i_robototehniki.htm',
+  ' ', ' ', 0, 'http://www.ifmo.ru/ru/viewdepartment/462/dekanat_fakulteta_sistem_upravleniya_i_robototehniki.htm',
   '197101, г. Санкт-Петербург, Кронверкский проспект, д.49.', 1 );
 
 
@@ -56,11 +66,6 @@ insert into `mydb`.`Programme` (
   'Никитина Мария Владимировна',  'Никитина Мария Владимировна', 2, ' ', 1,
   1, 'https://abit.ifmo.ru/bachelor/' ,  '2019-06-01', '2019-07-05' );
 
-insert into `mydb`.`Contacts` (
-  `idContacts`,
-  `phone_number`,
-  `email` ) values (3, '+7 (812) 457-18-56', 'ivanov@corp.ifmo.ru');
-
 insert into `mydb`.`Programme` (
   `idProgramme`,
   `programme_name`,
@@ -88,7 +93,48 @@ insert into `mydb`.`Programme` (
   'Иванов Иван Иванович',  'Иванов Иван Иванович', 3, ' ', 1,
   1, 'https://abit.ifmo.ru/bachelor/',   '2019-06-01', '2019-07-01' );
 
+insert into `mydb`.`Faculty` (
+  `idFaculty`,
+  `idUniversity`,
+  `faculty_name`,
+  `descript`,
+  `dean`,
+  `num_of_foreign_students`,
+  `website`,
+  `address`,
+  `Con_idContacts`)
+  values (3, 2, 'Факультет программирования',
+  ' ', ' ', 0, 'http://new.guap.ru/i04/contacts',
+  '197101, г. Санкт-Петербург, Кронверкский проспект, д.49.', 1 );
 
+insert into `mydb`.`Programme` (
+  `idProgramme`,
+  `programme_name`,
+  `field_name`,
+  `descript`,
+  `education_level`,
+  `language_of_study`,
+  `fee_per_year`,
+  `form_of_education`,
+  `studies_duration`,
+  `no_pay_positions`,
+  `pay_positions`,
+  `any_partner_univers`,
+  `programme_director`,
+  `person_to_contact`,
+  `Con_idContacts`,
+  `Dep_department_name`,
+  `idUniversity`,
+  `idFaculty`,
+  `docs_url`,
+  `docs_start_date`,
+  `docs_end_date`) values (
+  4, 'Прикладная математика и информатика', '01.03.2002', ' ',
+  'Бакалавриат', 'Русский', 100000, 'Очная', 4, 5, 5, 1,
+  'Иванов Иван Иванович',  'Иванов Иван Иванович', 3, ' ', 1,
+  1, 'http://new.guap.ru/i04/contacts',   '2019-06-01', '2019-07-01' );
+  
+  
  --- необходимые ЕГЭ
 
 --- заполнение справочиков ЕГЭ
@@ -141,4 +187,3 @@ insert into  `mydb`.`Programme_non_ege_ExamRequired` (
   `idNonEgeExam`,
   `min_value`,
   `exam_date`) values (1, 2, 3, '09.08.2019');
-

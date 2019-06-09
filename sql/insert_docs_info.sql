@@ -95,3 +95,29 @@ insert into `mydb`.`docs_required` (
   `key`,
   `idProgramme`,
   `idDoc`) values (0, 2, 5);
+
+-- для приборостроения
+insert into `mydb`.`docs_required` (
+  `key`,
+  `idProgramme`,
+  `idDoc`) values (0, 4, 1);
+
+insert into `mydb`.`docs_required` (
+  `key`,
+  `idProgramme`,
+  `idDoc`) values (0, 4, 2);
+
+insert into `mydb`.`docs_required` (
+  `key`,
+  `idProgramme`,
+  `idDoc`) values (0, 4, 3);
+
+insert into `mydb`.`docs_required` (
+  `key`,
+  `idProgramme`,
+  `idDoc`) values (0, 4, 4);
+
+insert into `mydb`.`docs_required` (
+  `key`,
+  `idProgramme`,
+  `idDoc`) values (0, 4, 5);
