@@ -131,8 +131,8 @@ insert into `mydb`.`Programme` (
   `docs_end_date`) values (
   4, 'Прикладная математика и информатика', '01.03.2002', ' ',
   'Бакалавриат', 'Русский', 100000, 'Очная', 4, 5, 5, 1,
-  'Иванов Иван Иванович',  'Иванов Иван Иванович', 3, ' ', 1,
-  1, 'http://new.guap.ru/i04/contacts',   '2019-06-01', '2019-07-01' );
+  'Иванов Иван Иванович',  'Иванов Иван Иванович', 3, ' ', 2,
+  3, 'http://new.guap.ru/i04/contacts',   '2019-06-01', '2019-07-01' );
   
   
  --- необходимые ЕГЭ
@@ -165,6 +165,27 @@ insert into `mydb`.`ege_requirements` (
   `idUniversity`,
   `idProgramme`) values (
     3, 60, 1, 1 );
+    
+    insert into `mydb`.`ege_requirements` (
+  `egeid`,
+  `min_value`,
+  `idUniversity`,
+  `idProgramme`) values (
+    1, 50, 2, 4 );
+
+insert into `mydb`.`ege_requirements` (
+  `egeid`,
+  `min_value`,
+  `idUniversity`,
+  `idProgramme`) values (
+    2, 60, 2, 4 );
+
+insert into `mydb`.`ege_requirements` (
+  `egeid`,
+  `min_value`,
+  `idUniversity`,
+  `idProgramme`) values (
+    3, 60, 2, 4 );
 
 insert into `mydb`.`non_ege_exams_dictionary` (
   `idNonEgeExam`,
@@ -187,3 +208,15 @@ insert into  `mydb`.`Programme_non_ege_ExamRequired` (
   `idNonEgeExam`,
   `min_value`,
   `exam_date`) values (1, 2, 3, '09.08.2019');
+
+insert into  `mydb`.`Programme_non_ege_ExamRequired` (
+  `idProgramme`,
+  `idNonEgeExam`,
+  `min_value`,
+  `exam_date`) values (4, 2, 3, '09.08.2019');
+  
+  insert into  `mydb`.`Programme_non_ege_ExamRequired` (
+  `idProgramme`,
+  `idNonEgeExam`,
+  `min_value`,
+  `exam_date`) values (4, 1, 3, '19.08.2019');

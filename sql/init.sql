@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ege_requirements` (
   `min_value` INT NULL,
   `idUniversity` INT NULL,
   `idProgramme` INT NULL,
-  PRIMARY KEY (`egeid`),
+  PRIMARY KEY (`egeid`,`idProgramme`),
   INDEX `fk_Programme_ege_req_idx` (`idProgramme` ASC),
   CONSTRAINT `ege_id`
     FOREIGN KEY (`egeid`)
